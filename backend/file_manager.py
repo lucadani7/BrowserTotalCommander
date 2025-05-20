@@ -1,5 +1,6 @@
 import os
 import shutil
+from datetime import datetime
 
 """FileManager class, who manages files and folders, with the following functions:
 
@@ -23,7 +24,17 @@ import shutil
 
 class FileManager:
     def list_files(self, path='.'):
-        return {'error': 'Path does not exist'} if not os.path.exists(path) else [{'name': f, 'size': os.path.getsize(f), 'ctime': os.path.getctime(f)} for f in os.listdir(path)]
+        if not os.path.exists(path):
+            return {'error': 'Path does not exist'}
+        files = []
+        for f in os.listdir(path):
+            file_info = {
+                'name': f,
+                'size': os.path.getsize(f),
+                'ctime': datetime.fromtimestamp(os.path.getctime(f)).strftime('%Y-%m-%d %H:%M:%S')
+            }
+            files.append(file_info)
+        return files
 
     def create_file(self, path):
         open(path, 'w').close()
